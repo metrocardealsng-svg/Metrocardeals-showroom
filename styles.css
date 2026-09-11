@@ -13,6 +13,46 @@ footer{display:flex;padding:34px var(--pad);border-top:1px solid var(--line);ali
 @media(max-width:1000px){.glass-orbit{right:30px;top:50%;width:185px;padding:20px}.glass-orbit strong{font-size:19px}.hero-controls{padding:4px 7px}}
 @media(max-width:640px){.glass-orbit{right:23px;top:59%;width:152px;padding:15px 18px;backdrop-filter:blur(10px)}.glass-index{font-size:5px;letter-spacing:.6px}.glass-orbit strong{font-size:16px;margin:14px 0}.glass-rule{margin:13px 0 9px}.glass-caption{font-size:5px;letter-spacing:.7px}.hero-controls{padding:0 5px;background:#ffffff08}.phone-links{font-size:13px;gap:18px}.hero-copy-two{max-width:90%}}
 @media(prefers-reduced-motion:reduce){.glass-orbit{display:none}#heroFrames{display:none}.vehicle-visual{will-change:auto}}
-/* Keep each scroll scene clear of the glass panel. */
-.hero-copy-two{left:var(--pad);right:auto;text-align:left}.hero-copy-two .eyebrow{justify-content:flex-start}
-@media(max-width:640px){.glass-orbit{display:none}}
+
+/* A scene owns its space: outgoing copy is removed before the next enters. */
+.hero-copy{transition:none;max-width:min(650px,calc(100% - 2 * var(--pad)));overflow-wrap:normal}
+.hero-copy.scene-active{opacity:1;transform:none;pointer-events:auto;animation:scene-enter .3s ease-out both}
+@keyframes scene-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{line-height:1.02;letter-spacing:-.045em}
+.hero-copy h2{line-height:1.08;letter-spacing:-.035em;font-size:clamp(36px,5vw,76px)}
+.hero-copy .eyebrow{font-size:12px;line-height:1.6;letter-spacing:1.3px}
+.hero-description{font-size:16px;line-height:1.55}
+.whatsapp-cta{background:#168447!important;color:#fff!important;border-color:#168447!important;font-size:14px!important}
+.whatsapp-cta:hover{background:#126c3a!important}
+.whatsapp-float{position:fixed;right:24px;bottom:24px;z-index:14;display:flex;align-items:center;gap:16px;padding:15px 22px;border-radius:32px;box-shadow:0 6px 24px #0004;font-weight:700;min-height:50px}
+@media(max-width:1000px){.glass-orbit{display:none}.hero-copy{max-width:calc(100% - 2 * var(--pad))}}
+@media(max-width:640px){
+ .hero-stage{min-height:740px}
+ .hero-copy,.hero-copy-two,.hero-copy-three{top:105px;left:22px;right:22px;max-width:none}
+ .hero h1{font-size:clamp(52px,15vw,86px);letter-spacing:-.04em;margin:18px 0 14px}
+ .hero-copy h2{font-size:clamp(32px,8.6vw,52px);letter-spacing:-.035em;margin:18px 0}
+ .hero-copy .eyebrow{font-size:12px;letter-spacing:.6px}
+ .hero-description{font-size:16px;line-height:1.5;margin-bottom:18px}
+ .hero .button{font-size:14px}
+ .hero-bottom{bottom:108px;gap:12px;flex-wrap:wrap}
+ .hero-disclaimer{bottom:88px;font-size:12px}
+ .whatsapp-float{display:none}
+ .header nav{gap:4px}.header .button-small{gap:8px;padding:9px 10px}
+ .mobile-bar a{min-height:46px;font-size:14px}
+}
+@media(max-height:700px) and (min-width:641px){.hero-copy{top:105px}.hero h1{font-size:72px;margin:16px 0}.hero-copy h2{font-size:52px;margin:16px 0}.glass-orbit{display:none}}
+@media(prefers-reduced-motion:reduce){.hero-copy.scene-active{animation:none}.hero{height:auto;min-height:740px}}
+
+.detail-source{font-size:14px;margin-bottom:20px}.detail-whatsapp{margin-bottom:12px}
+
+/* Preserve the full uploaded photographs without cropping the cars. */
+.vehicle-photo{display:block;width:100%;height:100%;object-fit:contain;background:#d9d9d6}
+.vehicle-visual:has(.vehicle-photo){aspect-ratio:3/4}
+.vehicle-visual:has(.vehicle-photo) .photo-label{background:#111c;color:#fff;padding:6px 9px;font-size:12px;letter-spacing:.4px;max-width:calc(100% - 28px)}
+.detail-art.detail-photos{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#101012}
+.detail-photos figure{margin:0;min-width:0}
+.detail-photos img{display:block;width:100%;height:auto;object-fit:contain}
+.detail-photos figcaption{font-size:12px;color:#ddd;padding:8px 12px}
+@media(max-width:640px){.detail-art.detail-photos{grid-template-columns:1fr}.vehicle-visual:has(.vehicle-photo){aspect-ratio:3/4}}
+
+.location-line address{font-style:normal;font-size:16px;line-height:1.7;color:#d3d2d5;margin-top:10px;overflow-wrap:break-word}
