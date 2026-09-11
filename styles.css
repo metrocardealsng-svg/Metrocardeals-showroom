@@ -13,3 +13,6 @@ footer{display:flex;padding:34px var(--pad);border-top:1px solid var(--line);ali
 @media(max-width:1000px){.glass-orbit{right:30px;top:50%;width:185px;padding:20px}.glass-orbit strong{font-size:19px}.hero-controls{padding:4px 7px}}
 @media(max-width:640px){.glass-orbit{right:23px;top:59%;width:152px;padding:15px 18px;backdrop-filter:blur(10px)}.glass-index{font-size:5px;letter-spacing:.6px}.glass-orbit strong{font-size:16px;margin:14px 0}.glass-rule{margin:13px 0 9px}.glass-caption{font-size:5px;letter-spacing:.7px}.hero-controls{padding:0 5px;background:#ffffff08}.phone-links{font-size:13px;gap:18px}.hero-copy-two{max-width:90%}}
 @media(prefers-reduced-motion:reduce){.glass-orbit{display:none}#heroFrames{display:none}.vehicle-visual{will-change:auto}}
+/* Keep each scroll scene clear of the glass panel. */
+.hero-copy-two{left:var(--pad);right:auto;text-align:left}.hero-copy-two .eyebrow{justify-content:flex-start}
+@media(max-width:640px){.glass-orbit{display:none}}
