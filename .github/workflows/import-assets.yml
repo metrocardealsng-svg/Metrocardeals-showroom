@@ -1,0 +1,28 @@
+name: Import showroom media
+on:
+  push:
+    branches: [import-showroom]
+    paths:
+      - scripts/import-assets.py
+      - scripts/asset-manifest.json
+      - .github/workflows/import-assets.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import and verify original media
+        run: python3 scripts/import-assets.py
+      - name: Commit complete media
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets public/vendor
+          if ! git diff --cached --quiet; then
+            git commit -m "Import verified showroom photographs, film and animation assets"
+            git push origin HEAD:import-showroom
+          fi
