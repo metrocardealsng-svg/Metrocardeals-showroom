@@ -6,6 +6,7 @@ let vehicles = [
  {id:'hyundai-santa-fe',make:'Hyundai',model:'Santa Fe Sport',year:2013,price:15650000,type:'SUV',condition:'Foreign used',color:'Colour to confirm',paint:'#5c6565',tag:'FOREIGN USED',note:'Listed as direct Belgium. Ask Metro to confirm the current vehicle details and inspection availability.'},
  {id:'xiaomi-su7',make:'Xiaomi',model:'SU7',year:null,price:78000000,type:'Sedan',condition:'Brand new',color:'Colour to confirm',paint:'#83938c',tag:'BRAND NEW',note:'Xiaomi SU7, listed as brand new. Confirm the model year, colour, specification and current availability.'}
 ];
+if (Array.isArray(window.metroInventory) && window.metroInventory.length) vehicles = window.metroInventory;
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const money = n=>'₦'+n.toLocaleString('en-NG');
