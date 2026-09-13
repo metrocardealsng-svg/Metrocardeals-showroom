@@ -26,6 +26,7 @@ footer{display:flex;padding:34px var(--pad);border-top:1px solid var(--line);ali
 .whatsapp-cta:hover{background:#212126!important;border-color:#2fbf6a88!important;transform:translateY(-1px)}
 .wa-icon{width:17px;height:17px;flex-shrink:0;color:#2fbf6a}
 .wa-label{display:inline-flex;align-items:center;gap:11px}
+.arrow-icon{width:.75em;height:.75em;display:inline-block;vertical-align:-.08em;flex-shrink:0}
 .whatsapp-float{position:fixed;right:24px;bottom:24px;z-index:14;display:flex;align-items:center;gap:14px;padding:15px 22px;border-radius:999px;box-shadow:0 10px 30px #0007,0 0 0 1px #2fbf6a22;font-weight:700;min-height:50px}
 .whatsapp-float .wa-icon{width:20px;height:20px}
 .whatsapp-float:before{content:'';position:absolute;inset:-4px;border-radius:999px;border:1px solid #2fbf6a55;animation:waPulse 2.6s ease-out infinite}
