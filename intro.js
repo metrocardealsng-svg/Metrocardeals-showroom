@@ -39,9 +39,15 @@
     triggered = true;
     setReveal(1);
     overlay.classList.add('intro-playing');
-    video.muted = false;
     video.currentTime = 0;
-    video.play().catch(finish);
+    video.muted = false;
+    video.play().catch(function () {
+      // iOS blocks unmuted playback unless play() is called directly from a
+      // discrete tap/click gesture — a touchmove-driven call gets rejected.
+      // Fall back to a muted play so the reveal still happens visually.
+      video.muted = true;
+      video.play().catch(finish);
+    });
   }
 
   function onWheel(e) {
@@ -63,12 +69,17 @@
     var delta = touchStartY - e.touches[0].clientY;
     touchStartY = e.touches[0].clientY;
     setReveal(reveal + delta / REQUIRED);
-    if (reveal >= 1) beginPlayback();
+  }
+  function onTouchEnd() {
+    // Only actually start playback on touchend: iOS Safari treats touchmove
+    // as too indirect a gesture to permit unmuted video.play() from it.
+    if (!triggered && reveal >= 1) beginPlayback();
   }
 
   overlay.addEventListener('wheel', onWheel, { passive: false });
   overlay.addEventListener('touchstart', onTouchStart, { passive: true });
   overlay.addEventListener('touchmove', onTouchMove, { passive: false });
+  overlay.addEventListener('touchend', onTouchEnd, { passive: true });
 
   enterBtn.addEventListener('click', beginPlayback);
   skipBtn.addEventListener('click', finish);
