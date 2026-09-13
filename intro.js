@@ -12,9 +12,18 @@
   var enterBtn = document.getElementById('introEnter');
   var skipBtn = document.getElementById('introSkip');
 
+  var REQUIRED = 320;
+  var reveal = 0;
+  var triggered = false;
+
   document.body.style.overflow = 'hidden';
   if (site) site.inert = true;
   enterBtn.focus();
+
+  function setReveal(value) {
+    reveal = Math.max(0, Math.min(1, value));
+    overlay.style.setProperty('--reveal', String(reveal));
+  }
 
   function finish() {
     sessionStorage.setItem('metro-intro-seen', '1');
@@ -25,13 +34,43 @@
     setTimeout(function () { overlay.remove(); }, 700);
   }
 
-  enterBtn.addEventListener('click', function () {
+  function beginPlayback() {
+    if (triggered) return;
+    triggered = true;
+    setReveal(1);
     overlay.classList.add('intro-playing');
     video.muted = false;
     video.currentTime = 0;
     video.play().catch(finish);
-  });
+  }
 
+  function onWheel(e) {
+    if (triggered) return;
+    if (e.ctrlKey) return;
+    e.preventDefault();
+    setReveal(reveal + e.deltaY / REQUIRED);
+    if (reveal >= 1) beginPlayback();
+  }
+
+  var touchStartY = null;
+  function onTouchStart(e) {
+    if (triggered) return;
+    touchStartY = e.touches[0].clientY;
+  }
+  function onTouchMove(e) {
+    if (triggered || touchStartY === null) return;
+    e.preventDefault();
+    var delta = touchStartY - e.touches[0].clientY;
+    touchStartY = e.touches[0].clientY;
+    setReveal(reveal + delta / REQUIRED);
+    if (reveal >= 1) beginPlayback();
+  }
+
+  overlay.addEventListener('wheel', onWheel, { passive: false });
+  overlay.addEventListener('touchstart', onTouchStart, { passive: true });
+  overlay.addEventListener('touchmove', onTouchMove, { passive: false });
+
+  enterBtn.addEventListener('click', beginPlayback);
   skipBtn.addEventListener('click', finish);
   video.addEventListener('ended', finish);
 })();
