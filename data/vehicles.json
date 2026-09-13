@@ -1,0 +1,116 @@
+[
+  {
+    "id": "infiniti-qx56",
+    "make": "Infiniti",
+    "model": "QX56",
+    "year": 2011,
+    "price": 10500000,
+    "type": "SUV",
+    "condition": "Nigerian used",
+    "color": "Colour to confirm",
+    "paint": "#53585f",
+    "tag": "DISTRESS SALE",
+    "note": "Described as super clean in the listing. Ask Metro for current photos, inspection details and availability.",
+    "instagramSource": "https://www.instagram.com/p/DdE4IEpAKDJ/",
+    "photos": [
+      {"src": "assets/cars/infiniti-qx56-1.jpg", "label": "Front view"},
+      {"src": "assets/cars/infiniti-qx56-2.jpg", "label": "Rear view"}
+    ]
+  },
+  {
+    "id": "hyundai-sonata",
+    "make": "Hyundai",
+    "model": "Sonata Sport",
+    "year": 2016,
+    "price": 12850000,
+    "type": "Sedan",
+    "condition": "Confirm condition",
+    "color": "Red",
+    "paint": "#923d43",
+    "tag": "SPORT SEDAN",
+    "note": "Red Sonata Sport. Confirm current condition, price and availability with Metro.",
+    "instagramSource": "https://www.instagram.com/p/Dc89JjHgM_C/",
+    "photos": [
+      {"src": "assets/cars/hyundai-sonata-1.jpg", "label": "Front view"},
+      {"src": "assets/cars/hyundai-sonata-2.jpg", "label": "Rear view"}
+    ]
+  },
+  {
+    "id": "toyota-rav4",
+    "make": "Toyota",
+    "model": "RAV4",
+    "year": 2017,
+    "price": 23800000,
+    "type": "SUV",
+    "condition": "Confirm condition",
+    "color": "White",
+    "paint": "#e3e3df",
+    "tag": "FAMILY SUV",
+    "note": "White Toyota RAV4. Ask Metro for current vehicle photos, condition and inspection arrangements.",
+    "instagramSource": "https://www.instagram.com/p/DdE4OoqgD_v/",
+    "photos": [
+      {"src": "assets/cars/toyota-rav4-1.jpg", "label": "Front view"},
+      {"src": "assets/cars/toyota-rav4-2.jpg", "label": "Rear view"}
+    ]
+  },
+  {
+    "id": "toyota-corolla",
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2012,
+    "price": 6850000,
+    "type": "Sedan",
+    "condition": "Confirm condition",
+    "color": "Colour to confirm",
+    "paint": "#a0a3aa",
+    "tag": "EVERYDAY DRIVE",
+    "note": "Listed as South Africa spec. Confirm current condition, specification, price and availability.",
+    "instagramSource": "https://www.instagram.com/p/Dbn3epsAPS9/",
+    "photos": [
+      {"src": "assets/cars/toyota-corolla-1.jpg", "label": "Front view"},
+      {"src": "assets/cars/toyota-corolla-2.jpg", "label": "Rear view"}
+    ]
+  },
+  {
+    "id": "hyundai-santa-fe",
+    "make": "Hyundai",
+    "model": "Santa Fe Sport",
+    "year": 2013,
+    "price": 15650000,
+    "type": "SUV",
+    "condition": "Foreign used",
+    "color": "Colour to confirm",
+    "paint": "#5c6565",
+    "tag": "FOREIGN USED",
+    "note": "Listed as direct Belgium. Ask Metro to confirm the current vehicle details and inspection availability.",
+    "instagramSource": "https://www.instagram.com/p/DblJeE4ALOq/",
+    "photos": [
+      {"src": "assets/cars/hyundai-santa-fe-1.jpg", "label": "Front three-quarter view"},
+      {"src": "assets/cars/hyundai-santa-fe-2.jpg", "label": "Rear three-quarter view"},
+      {"src": "assets/cars/hyundai-santa-fe-3.jpg", "label": "Dashboard and front seats"},
+      {"src": "assets/cars/hyundai-santa-fe-4.jpg", "label": "Rear seats and panoramic roof"}
+    ]
+  },
+  {
+    "id": "xiaomi-su7",
+    "make": "Xiaomi",
+    "model": "SU7",
+    "year": null,
+    "price": 78000000,
+    "type": "Sedan",
+    "condition": "Brand new",
+    "color": "Colour to confirm",
+    "paint": "#83938c",
+    "tag": "BRAND NEW",
+    "note": "Xiaomi SU7, listed as brand new. Confirm the model year, colour, specification and current availability.",
+    "instagramSource": "https://www.instagram.com/p/Da0N-9MgMgq/",
+    "photos": [
+      {"src": "assets/cars/xiaomi-su7-1.jpg", "label": "Front three-quarter view"},
+      {"src": "assets/cars/xiaomi-su7-2.jpg", "label": "Front view"},
+      {"src": "assets/cars/xiaomi-su7-3.jpg", "label": "Rear three-quarter view"},
+      {"src": "assets/cars/xiaomi-su7-4.jpg", "label": "Rear view"},
+      {"src": "assets/cars/xiaomi-su7-5.jpg", "label": "Dashboard and front seats"},
+      {"src": "assets/cars/xiaomi-su7-6.jpg", "label": "Rear cabin and glass roof"}
+    ]
+  }
+]
