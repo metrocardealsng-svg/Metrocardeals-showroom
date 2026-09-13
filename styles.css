@@ -63,7 +63,7 @@ footer{display:flex;padding:34px var(--pad);border-top:1px solid var(--line);ali
 .photo-broken img{display:none}
 .photo-broken:before{content:'Photo unavailable — ask Metro to resend';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-size:11px;color:#8a8a92}
 .detail-photos figcaption{font-size:12px;color:#ddd;padding:8px 12px}
-@media(max-width:640px){.detail-art.detail-photos{grid-template-columns:1fr}.vehicle-visual:has(.vehicle-photo){aspect-ratio:3/4}}
+@media(max-width:640px){.detail-art.detail-photos{grid-template-columns:1fr}.vehicle-visual:has(.vehicle-photo){aspect-ratio:auto;height:300px}.vehicle-photo{object-fit:cover}}
 
 .location-line address{font-style:normal;font-size:16px;line-height:1.7;color:#d3d2d5;margin-top:10px;overflow-wrap:break-word}
 
