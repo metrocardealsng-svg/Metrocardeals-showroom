@@ -101,5 +101,5 @@ async function refreshInventory(){
  return inventoryRequest;
 }
 refreshInventory().catch(()=>{$('#resultCount').textContent='Cars could not be loaded. Please refresh.';});
-setInterval(()=>{if(!document.hidden)refreshInventory().catch(()=>{});},30000);
+setInterval(()=>{if(!document.hidden)refreshInventory().catch(()=>{});},10000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshInventory().catch(()=>{});});
