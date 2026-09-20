@@ -31,4 +31,4 @@ This work is based on the GitHub commit Vercel reported serving at `metrocardeal
 - Set the exact authenticated owner UUID in Vercel. Merely visiting `/admin/` does not provide access.
 - Existing seed inventory is loaded from the static data file. Remove or archive the legacy entries in a subsequent separate code migration after you have reviewed every vehicle; do not delete them blindly.
 - A sold or reserved car is hidden from the **available** showroom; it remains editable in admin. Unpublished price/photo changes are never written into GitHub.
-- If SQL or environment setup is incomplete, the public site shows the existing seed cars and admin writes remain disabled rather than exposing any database key.
+- If all four environment variables are absent, the public site shows the existing seed cars and admin writes are disabled. Once the variables are set, you **must** run the SQL schema before publishing; otherwise the inventory endpoint reports unavailable instead of silently showing stale stock. No database secret is exposed to the browser.
