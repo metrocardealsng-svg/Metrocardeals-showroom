@@ -72,12 +72,34 @@ function initMotion(){
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented)return;const target=document.getElementById(a.hash.slice(1));if(target){e.preventDefault();target.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'start'});if(a.classList.contains('skip-link')){target.tabIndex=-1;target.focus({preventScroll:true});}}});
 
 $('#year').textContent=new Date().getFullYear();updateScroll();initMotion();
-fetch('data/vehicles.json').then(r=>r.json()).then(data=>{
- vehicles=data;
- try {const raw=JSON.parse(localStorage.getItem('metro-saved')||'[]');saved=new Set(Array.isArray(raw)?raw.filter(id=>vehicles.some(v=>v.id===id)):[]);} catch {saved=new Set();}
- for(const v of vehicles){const option=document.createElement('option');option.value=title(v);option.textContent=`${title(v)} — ${money(v.price)}`;$('#enquiryVehicle').append(option);}
- $('#collectionCount').textContent=String(vehicles.length).padStart(2,'0');
- for(const make of [...new Set(vehicles.map(v=>v.make))].sort()){const option=document.createElement('option');option.textContent=make;$('#makeFilter').append(option);}
- render();
- if(window.metroCardsMotion)window.metroCardsMotion();
-}).catch(()=>{$('#resultCount').textContent='Cars could not be loaded. Please refresh.';});
+let inventoryRequest=null,inventoryStamp='';
+async function refreshInventory(){
+ if(inventoryRequest)return inventoryRequest;
+ inventoryRequest=(async()=>{
+  const response=await fetch('/api/inventory',{cache:'no-store'});
+  if(!response.ok)throw Error('Inventory unavailable');
+  const data=await response.json();
+  if(!Array.isArray(data))throw Error('Invalid inventory');
+  const stamp=JSON.stringify(data);
+  if(stamp===inventoryStamp)return;
+  inventoryStamp=stamp;vehicles=data;
+  try{
+   const raw=JSON.parse(localStorage.getItem('metro-saved')||'[]');
+   saved=new Set(Array.isArray(raw)?raw.filter(id=>vehicles.some(v=>v.id===id)):[]);
+  }catch{saved=new Set();}
+  const oldChoice=$('#enquiryVehicle').value;
+  $('#enquiryVehicle').replaceChildren(new Option('Help me find a car','Help me find a car'));
+  for(const v of vehicles)$('#enquiryVehicle').add(new Option(title(v)+' — '+money(v.price),title(v)));
+  if([...$('#enquiryVehicle').options].some(o=>o.value===oldChoice))$('#enquiryVehicle').value=oldChoice;
+  const filter=$('#makeFilter'),oldMake=filter.value;
+  filter.replaceChildren(new Option('All makes','all'));
+  for(const make of [...new Set(vehicles.map(v=>v.make))].sort())filter.add(new Option(make,make));
+  filter.value=[...filter.options].some(o=>o.value===oldMake)?oldMake:'all';
+  $('#collectionCount').textContent=String(vehicles.length).padStart(2,'0');
+  render();
+ })().finally(()=>{inventoryRequest=null;});
+ return inventoryRequest;
+}
+refreshInventory().catch(()=>{$('#resultCount').textContent='Cars could not be loaded. Please refresh.';});
+setInterval(()=>{if(!document.hidden)refreshInventory().catch(()=>{});},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshInventory().catch(()=>{});});
