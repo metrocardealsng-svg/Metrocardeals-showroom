@@ -20,6 +20,7 @@ function slugify(text) {
 
 function escapeAttr(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;'); }
 function escapeHtml(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function displayPhotoUrl(src) { const s = String(src || ''); if (!s) return ''; if (/^https?:\/\//i.test(s) || s.startsWith('/')) return s; return '/' + s.replace(/^\.\//, ''); }
 
 function photoStoragePath(url) {
   const marker = '/vehicle-photos/';
@@ -42,7 +43,7 @@ async function uploadPhoto(file, folder) {
 }
 
 function photoGridHtml(photos) {
-  return (photos || []).map((p, i) => `<div class="photo-item" data-idx="${i}"><img src="${p.src}" alt=""><button type="button" data-remove-photo>×</button></div>`).join('');
+  return (photos || []).map((p, i) => `<div class="photo-item" data-idx="${i}"><img src="${displayPhotoUrl(p.src)}" alt=""><button type="button" data-remove-photo>×</button></div>`).join('');
 }
 
 function wirePhotoGridRemovals(gridEl, photosArr, onChange) {
@@ -134,7 +135,7 @@ function cardHtml(v) {
   return `
     <div class="card" data-id="${v.id}">
       <div class="card-top">
-        ${thumb ? `<img class="card-thumb" src="${thumb}" alt="">` : `<div class="card-thumb"></div>`}
+        ${thumb ? `<img class="card-thumb" src="${displayPhotoUrl(thumb)}" alt="">` : `<div class="card-thumb"></div>`}
         <div class="card-info">
           <h3>${escapeHtml(v.make)} ${escapeHtml(v.model)} ${v.year || ''}</h3>
           <div class="price">${money(v.price)}</div>
@@ -330,7 +331,7 @@ function pendingCardHtml(v) {
   return `
     <div class="card" data-pending-id="${v.id}">
       <div class="card-top" style="flex-wrap:wrap">
-        <div class="photo-grid">${(v.photos || []).map(p => `<img class="card-thumb" src="${p.src}" alt="" style="width:70px;height:70px">`).join('')}</div>
+        <div class="photo-grid">${(v.photos || []).map(p => `<img class="card-thumb" src="${displayPhotoUrl(p.src)}" alt="" style="width:70px;height:70px">`).join('')}</div>
       </div>
       <div style="padding:0 14px 14px">
         <div class="field-row">
