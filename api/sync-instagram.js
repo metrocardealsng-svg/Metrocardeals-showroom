@@ -1,4 +1,4 @@
-const { ghGetJson, ghPutJson, ghPutFile } = require('./_lib/github');
+const { adminClient } = require('./_lib/supabase');
 const { parseCaption } = require('./_lib/parse-caption');
 
 const GRAPH = 'https://graph.facebook.com/v21.0';
@@ -44,14 +44,11 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const [media, synced, pending, vehicles] = await Promise.all([
-      fetchMediaList(igUserId, igToken),
-      ghGetJson('data/synced-posts.json', { processedIds: [] }),
-      ghGetJson('data/pending.json', []),
-      ghGetJson('data/vehicles.json', []),
-    ]);
+    const supabase = adminClient();
+    const media = await fetchMediaList(igUserId, igToken);
 
-    const processedIds = new Set(synced.data.processedIds || []);
+    const { data: syncedRows } = await supabase.from('synced_instagram_posts').select('post_id');
+    const processedIds = new Set((syncedRows || []).map(r => r.post_id));
     const newMedia = media.filter(m => !processedIds.has(m.id) && m.media_type !== 'VIDEO');
 
     if (newMedia.length === 0) {
@@ -59,8 +56,12 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const usedIds = new Set([...vehicles.data, ...pending.data].map(v => v.id));
-    const pendingList = pending.data;
+    const [{ data: existingVehicles }, { data: existingPending }] = await Promise.all([
+      supabase.from('vehicles').select('id'),
+      supabase.from('pending_vehicles').select('id'),
+    ]);
+    const usedIds = new Set([...(existingVehicles || []), ...(existingPending || [])].map(v => v.id));
+
     let addedCount = 0;
 
     for (const item of newMedia) {
@@ -74,8 +75,9 @@ module.exports = async (req, res) => {
       } else if (item.media_type === 'IMAGE') {
         imageUrls = [item.media_url];
       }
+
       if (imageUrls.length === 0) {
-        processedIds.add(item.id);
+        await supabase.from('synced_instagram_posts').insert({ post_id: item.id });
         continue;
       }
 
@@ -91,27 +93,38 @@ module.exports = async (req, res) => {
       const photos = [];
       for (let i = 0; i < imageUrls.length; i++) {
         const buffer = await downloadImage(imageUrls[i]);
-        const path = `assets/cars/pending/${slug}-${i + 1}.jpg`;
-        await ghPutFile(path, buffer, `Stage photo for pending listing ${slug}`, null);
-        photos.push({ src: path, label: i === 0 ? 'Front view' : `Photo ${i + 1}` });
+        const path = `pending/${slug}-${i + 1}.jpg`;
+        const { error: uploadError } = await supabase.storage.from('vehicle-photos').upload(path, buffer, {
+          contentType: 'image/jpeg',
+          upsert: true,
+        });
+        if (uploadError) throw uploadError;
+        const { data: publicUrlData } = supabase.storage.from('vehicle-photos').getPublicUrl(path);
+        photos.push({ src: publicUrlData.publicUrl, label: i === 0 ? 'Front view' : `Photo ${i + 1}` });
       }
 
-      pendingList.push({
+      const { error: insertError } = await supabase.from('pending_vehicles').insert({
         id: slug,
-        ...parsed,
+        make: parsed.make,
+        model: parsed.model,
+        year: parsed.year,
+        price: parsed.price,
+        type: parsed.type,
+        condition: parsed.condition,
+        color: parsed.color,
+        paint: parsed.paint,
+        tag: parsed.tag,
+        note: parsed.note,
         photos,
-        instagramSource: item.permalink,
-        instagramPostId: item.id,
-        rawCaption: caption,
-        addedAt: new Date().toISOString(),
+        instagram_source: item.permalink,
+        instagram_post_id: item.id,
+        raw_caption: caption,
       });
+      if (insertError) throw insertError;
 
-      processedIds.add(item.id);
+      await supabase.from('synced_instagram_posts').insert({ post_id: item.id });
       addedCount += 1;
     }
-
-    await ghPutJson('data/pending.json', pendingList, `Stage ${addedCount} new listing(s) from Instagram`, pending.sha);
-    await ghPutJson('data/synced-posts.json', { processedIds: [...processedIds] }, 'Update synced Instagram post IDs', synced.sha);
 
     res.status(200).json({ ok: true, newPosts: addedCount });
   } catch (err) {

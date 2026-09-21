@@ -71,9 +71,12 @@ function initMotion(){
 
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented)return;const target=document.getElementById(a.hash.slice(1));if(target){e.preventDefault();target.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'start'});if(a.classList.contains('skip-link')){target.tabIndex=-1;target.focus({preventScroll:true});}}});
 
+function mapVehicleRow(row){return {...row,instagramSource:row.instagram_source};}
+
 $('#year').textContent=new Date().getFullYear();updateScroll();initMotion();
-fetch('data/vehicles.json').then(r=>r.json()).then(data=>{
- vehicles=data;
+window.metroSupabase().from('vehicles').select('*').eq('status','active').order('sort_order').then(({data,error})=>{
+ if(error||!data)throw error||new Error('No data');
+ vehicles=data.map(mapVehicleRow);
  try {const raw=JSON.parse(localStorage.getItem('metro-saved')||'[]');saved=new Set(Array.isArray(raw)?raw.filter(id=>vehicles.some(v=>v.id===id)):[]);} catch {saved=new Set();}
  for(const v of vehicles){const option=document.createElement('option');option.value=title(v);option.textContent=`${title(v)} — ${money(v.price)}`;$('#enquiryVehicle').append(option);}
  $('#collectionCount').textContent=String(vehicles.length).padStart(2,'0');
