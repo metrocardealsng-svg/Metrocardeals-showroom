@@ -82,14 +82,19 @@ async function trySignIn() {
   const email = $('#email').value.trim();
   const password = $('#password').value;
   $('#gateError').hidden = true;
-  const { error } = await sb().auth.signInWithPassword({ email, password });
-  if (error) { showGateError(error.message); return; }
-  if (!(await isAdminUser())) {
-    await sb().auth.signOut();
-    showGateError('This account is not authorized as an admin.');
-    return;
+  try {
+    if (!window.supabase) throw new Error('Supabase library did not load (check your internet connection and reload).');
+    const { error } = await sb().auth.signInWithPassword({ email, password });
+    if (error) { showGateError(error.message); return; }
+    if (!(await isAdminUser())) {
+      await sb().auth.signOut();
+      showGateError('This account is not authorized as an admin.');
+      return;
+    }
+    showApp();
+  } catch (err) {
+    showGateError('Unexpected error: ' + err.message);
   }
-  showApp();
 }
 
 $('#signInBtn').addEventListener('click', trySignIn);
@@ -97,8 +102,13 @@ $('#password').addEventListener('keydown', e => { if (e.key === 'Enter') trySign
 $('#signOutBtn').addEventListener('click', async () => { await sb().auth.signOut(); location.reload(); });
 
 (async function init() {
-  const { data: { session } } = await sb().auth.getSession();
-  if (session && (await isAdminUser())) showApp();
+  try {
+    if (!window.supabase) return;
+    const { data: { session } } = await sb().auth.getSession();
+    if (session && (await isAdminUser())) showApp();
+  } catch (err) {
+    console.error('Session restore failed:', err);
+  }
 })();
 
 // ---------- Tabs ----------
